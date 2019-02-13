@@ -9,7 +9,7 @@ app.use(cors())
 
 // You have to create the images subdirectory if it doesn't exist
 // __dirname is the name of the directory where THIS FILE is located
-var upload = multer({ dest: __dirname + "/images/" })
+let upload = multer({ dest: __dirname + "/images/" })
 
 // Every file in ./images will become an endpoint
 // This is useful for retrieving the images once they're stored
