@@ -29,6 +29,7 @@ class App extends Component {
     formData.append("product-image", this.state.selectedFile)
     // The description will be in the req.body of the backend
     formData.append("description", this.state.description)
+
     formData.append("sessionId", "13451")
     fetch("http://localhost:4000/addItem", {
       body: formData,

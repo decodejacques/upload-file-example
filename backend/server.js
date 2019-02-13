@@ -2,6 +2,8 @@ let express = require("express")
 let cors = require("cors")
 let bodyParser = require("body-parser")
 let app = express()
+// You'll need the fs module
+var fs = require("fs")
 
 // You'll need to npm install multer
 let multer = require("multer")
@@ -20,6 +22,10 @@ app.post("/addItem", upload.single("product-image"), (req, res) => {
   // A file is created in ./images. Go check it out!
   // Also, look at the output in the debug console
   console.log("file", req.file)
+  // Get the extension of the file so we can rename it
+  let extension = req.file.originalname.split(".").pop()
+  // Rename the file so that it has the correct extension
+  fs.rename(req.file.path, req.file.path + "." + extension)
   console.log("body", req.body)
   res.send(JSON.stringify({ success: true }))
 })
