@@ -1,23 +1,31 @@
 let express = require("express")
 let cors = require("cors")
 let bodyParser = require("body-parser")
-let fs = require("fs")
-let app = express()
-app.use(express.static("images"))
 
-app.use(bodyParser.raw({ limit: "10mb", type: "*/*" }))
+// You'll need to npm install multer
+let multer = require("multer")
+let app = express()
 app.use(cors())
 
-let counter = 0
-let getId = function() {
-  counter++
-  return "image" + counter
-}
+// You have to create the images subdirectory
+var upload = multer({ dest: "./images/" })
 
-app.post("/upload", (req, res) => {
-  let extension = req.headers.content - type.split("/")[1]
-  let path = "/images/" + getId() + "." + extension
-  fs.writeFileSync("." + path, req.body)
-  // store the path somewhere
+// Every file in ./images will become an endpoint
+// This is useful for retrieving the images once they're stored
+app.use(express.static("./images"))
+
+// product-image matches the string in the frontend (can you find it?)
+app.post("/addItem", upload.single("product-image"), (req, res) => {
+  // A file is created in ./images. Go check it out!
+  // Also, look at the output in the debug console
+  console.log("file", req.file)
+  console.log("body", req.body)
+  res.send(JSON.stringify({ success: true }))
 })
-app.listen(5050)
+
+// Your multer endpoints MUST come BEFORE the following line
+app.use(bodyParser.raw({ type: "*/*" }))
+
+// Your other endpoints MUST come AFTER the previous line
+
+app.listen(4000)
