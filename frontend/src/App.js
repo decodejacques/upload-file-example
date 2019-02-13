@@ -24,7 +24,7 @@ class App extends Component {
   submitHandler(event) {
     event.preventDefault()
 
-    var formData = new FormData()
+    let formData = new FormData()
     // product-image matches the string in the backend (can you find it?)
     formData.append("product-image", this.state.selectedFile)
     // The description will be in the req.body of the backend
