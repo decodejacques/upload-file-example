@@ -10,7 +10,8 @@ class App extends Component {
     this.submitHandler = this.submitHandler.bind(this)
     this.state = {
       selectedFile: undefined, // The file that the user will selected
-      description: "" // the user can also
+      description: "", // the user can also
+      items: []
     }
   }
   fileChangeHandler(event) {
@@ -30,19 +31,40 @@ class App extends Component {
     // The description will be in the req.body of the backend
     formData.append("description", this.state.description)
 
-    formData.append("sessionId", "13451")
     fetch("http://localhost:4000/addItem", {
       body: formData,
       method: "POST"
     })
+      .then(responseHeader => {
+        return responseHeader.text()
+      })
+      .then(responseBody => {
+        let parsed = JSON.parse(responseBody)
+        this.setState({ items: parsed })
+      })
   }
   render() {
     return (
-      <form onSubmit={this.submitHandler}>
-        <input type="file" onChange={this.fileChangeHandler} />
-        <input type="text" onChange={this.descriptionChangeHandler} />
-        <input type="submit" />
-      </form>
+      <div>
+        {this.state.items.map(item => {
+          console.log("item data", item)
+          // window.location.hostname is the domain (or IP) from where the webpage was downloaded
+          let imagePath =
+            "http://" + window.location.hostname + ":4000" + item.path
+          console.log("image path", imagePath)
+          return (
+            <div>
+              <img src={imagePath} />
+              {item.description}
+            </div>
+          )
+        })}
+        <form onSubmit={this.submitHandler}>
+          <input type="file" onChange={this.fileChangeHandler} />
+          <input type="text" onChange={this.descriptionChangeHandler} />
+          <input type="submit" />
+        </form>
+      </div>
     )
   }
 }

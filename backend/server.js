@@ -2,8 +2,13 @@ let express = require("express")
 let cors = require("cors")
 let bodyParser = require("body-parser")
 let app = express()
+
+// We're going to store the uploaded file names in an array
+// Usually they are stored in a database
+let itemData = []
+
 // You'll need the fs module
-var fs = require("fs")
+let fs = require("fs")
 
 // You'll need to npm install multer
 let multer = require("multer")
@@ -21,13 +26,29 @@ app.use(express.static(__dirname + "/images"))
 app.post("/addItem", upload.single("product-image"), (req, res) => {
   // A file is created in ./images. Go check it out!
   // Also, look at the output in the debug console
-  console.log("file", req.file)
+
+  console.log(req.file)
+  // Multer generates a new random filename every time a file is uploaded
+  console.log("new file location", req.file.path)
+
   // Get the extension of the file so we can rename it
   let extension = req.file.originalname.split(".").pop()
+
   // Rename the file so that it has the correct extension
-  fs.rename(req.file.path, req.file.path + "." + extension)
+  fs.rename(req.file.path, req.file.path + "." + extension, () => {})
+  // req.body contains all the form data fields that are not files
+  // In this case the only one is product-description
   console.log("body", req.body)
-  res.send(JSON.stringify({ success: true }))
+  // This is the data that needs to be stored
+  let itemToStore = {
+    path: "/" + req.file.filename + "." + extension,
+    description: req.body.description
+  }
+  console.log("we are adding", itemToStore)
+  // itemData needs to contain the file location and description
+  itemData.push(itemToStore)
+  console.log("updated itemData:", itemData)
+  res.send(JSON.stringify(itemData))
 })
 
 // VERY IMPORTANT: Your multer endpoints MUST come BEFORE the following line

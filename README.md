@@ -1,3 +1,7 @@
+# Important
+
+Please run this project and upload some files and look at the console logs in the backend and the frontend.
+
 # Installation
 
 ## npm install in both the frontend and backend
