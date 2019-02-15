@@ -18,8 +18,9 @@ app.use(cors())
 // __dirname is the name of the directory where THIS FILE is located
 let upload = multer({ dest: __dirname + "/images/" })
 
-// Every file in ./images will become an endpoint
+// Every file in ./images will become a GET endpoint
 // This is useful for retrieving the images once they're stored
+// This is what gives the data for the <img src={...}> elements in the frontend
 app.use(express.static(__dirname + "/images"))
 
 // product-image matches the string in the frontend (can you find it?)
